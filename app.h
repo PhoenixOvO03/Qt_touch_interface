@@ -1,6 +1,8 @@
 #ifndef APP_H
 #define APP_H
 
+#include "software.h"
+
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
@@ -16,6 +18,8 @@ public:
     explicit App(const QString& name, const QString& url = ":/img/qt.png", QWidget *parent = nullptr);
 
 signals:
+    void pressed(QString arg);
+    void clicked(Software* app);
 
 private:
     QLabel* m_name;

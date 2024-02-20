@@ -7,32 +7,58 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    appBottonInit();
+    interfaceInit();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::appBottonInit()
+{
+    m_appList << new App("null") << new App("null") << new App("null") << new App("null")
+              << new App("null") << new App("null") << new App("null") << new App("null")
+              << new App("null") << new App("null") << new App("null") << new App("close",":/img/close.png");
+
+    // 初始化press和click点击的connect
+    for (int i = 0; i < 12; ++i)
+    {
+        connect(m_appList.at(i), &App::pressed, [&](QString arg){
+            ui->statusbar->showMessage(arg, 4000);
+        });
+        connect(m_appList.at(i), &App::clicked, [&](Software* app){
+            ui->centralwidget->hide();
+            m_currentApp = app;
+            m_currentApp->setParent(this);
+            m_currentApp->show();
+        });
+    }
+}
+
+void MainWindow::interfaceInit()
+{
+    //主界面大小
     this->setFixedSize(800,600);
 
+    // 每一层添加app
     m_firstFloor = new QHBoxLayout();
     m_firstFloor->addStretch(1);
-    m_firstFloor->addWidget(new App("我"));
-    m_firstFloor->addWidget(new App("爱"));
-    m_firstFloor->addWidget(new App("茶"));
-    m_firstFloor->addWidget(new App("茶"));
+    for (int i = 0;i < 4; ++i)m_firstFloor->addWidget(m_appList.at(i));
     m_firstFloor->addStretch(1);
 
     m_secondFloor = new QHBoxLayout();
     m_secondFloor->addStretch(1);
-    m_secondFloor->addWidget(new App("null"));
-    m_secondFloor->addWidget(new App("null"));
-    m_secondFloor->addWidget(new App("null"));
-    m_secondFloor->addWidget(new App("null"));
+    for (int i = 4;i < 8; ++i)m_secondFloor->addWidget(m_appList.at(i));
     m_secondFloor->addStretch(1);
 
     m_thirdFllor = new QHBoxLayout();
     m_thirdFllor->addStretch(1);
-    m_thirdFllor->addWidget(new App("null"));
-    m_thirdFllor->addWidget(new App("null"));
-    m_thirdFllor->addWidget(new App("null"));
-    m_thirdFllor->addWidget(new App("close",":/img/close.png"));
+    for (int i = 8;i < 12; ++i)m_thirdFllor->addWidget(m_appList.at(i));
     m_thirdFllor->addStretch(1);
 
+    // 把所有层集合起来
     m_allApp = new QVBoxLayout();
     m_allApp->addStretch(1);
     m_allApp->addLayout(m_firstFloor);
@@ -40,10 +66,17 @@ MainWindow::MainWindow(QWidget *parent)
     m_allApp->addLayout(m_thirdFllor);
     m_allApp->addStretch(1);
 
+    // 放到主界面
     ui->centralwidget->setLayout(m_allApp);
 }
 
-MainWindow::~MainWindow()
+void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    delete ui;
+    // 按下Esc退出app显示主界面
+    if (event->key() == Qt::Key_Escape)
+    {
+        delete m_currentApp;
+        m_currentApp = nullptr;
+        ui->centralwidget->show();
+    }
 }

@@ -28,6 +28,9 @@ App::App(QWidget *parent)
     vLayout->addLayout(hLayout_name);
     vLayout->addLayout(hLayout_btn);
     vLayout->addStretch(1);
+
+    connect(m_appBtn, &QAbstractButton::pressed, [&](){emit pressed(m_name->text());});
+    connect(m_appBtn, &QPushButton::clicked, [&](){emit clicked(new Software());});
 }
 
 App::App(const QString &name, const QString &url, QWidget *parent)
