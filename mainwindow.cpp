@@ -18,9 +18,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::appBottonInit()
 {
-    m_appList << new App("null") << new App("null") << new App("null") << new App("null")
+    m_appList << new App("SerialHelper") << new App("null") << new App("null") << new App("null")
               << new App("null") << new App("null") << new App("null") << new App("null")
-              << new App("null") << new App("null") << new App("null") << new App("close",":/img/close.png");
+              << new App("null") << new App("null") << new App("null") << new App("close");
 
     // 初始化press和click点击的connect
     for (int i = 0; i < 12; ++i)
@@ -28,7 +28,8 @@ void MainWindow::appBottonInit()
         connect(m_appList.at(i), &App::pressed, [&](QString arg){
             ui->statusbar->showMessage(arg, 4000);
         });
-        connect(m_appList.at(i), &App::clicked, [&](Software* app){
+        connect(m_appList.at(i), &App::clicked, [&](Software* app, QString name){
+            this->setWindowTitle(name);
             ui->centralwidget->hide();
             m_currentApp = app;
             m_currentApp->setParent(this);
@@ -41,6 +42,7 @@ void MainWindow::interfaceInit()
 {
     //主界面大小
     this->setFixedSize(800,600);
+    this->setWindowTitle("Touch_interface");
 
     // 每一层添加app
     m_firstFloor = new QHBoxLayout();
@@ -78,5 +80,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         delete m_currentApp;
         m_currentApp = nullptr;
         ui->centralwidget->show();
+        this->setWindowTitle("Touch_interface");
     }
 }

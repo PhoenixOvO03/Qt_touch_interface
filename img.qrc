@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>img/close.png</file>
         <file>img/qt.png</file>
+        <file>img/SerialHelper.png</file>
     </qresource>
 </RCC>

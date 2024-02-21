@@ -1,4 +1,5 @@
 #include "app.h"
+#include "serialhelper.h"
 
 #include <QIcon>
 
@@ -30,12 +31,15 @@ App::App(QWidget *parent)
     vLayout->addStretch(1);
 
     connect(m_appBtn, &QAbstractButton::pressed, [&](){emit pressed(m_name->text());});
-    connect(m_appBtn, &QPushButton::clicked, [&](){emit clicked(new Software());});
+    connect(m_appBtn, &QPushButton::clicked, [&](){
+        if (m_name->text() == "SerialHelper")emit clicked(new SerialHelper(), m_name->text());
+    });
 }
 
-App::App(const QString &name, const QString &url, QWidget *parent)
+App::App(const QString &name, QWidget *parent)
     : App(parent)
 {
     m_name->setText(name);
-    m_appBtn->setIcon(QIcon(url));
+    m_appBtn->setIcon(QIcon(QString(":/img/%1.png").arg(name)));
+    if (name == "null")m_appBtn->setIcon(QIcon(":/img/qt.png"));
 }

@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets serialport
 
 CONFIG += c++17
 
@@ -12,11 +12,13 @@ SOURCES += \
     app.cpp \
     main.cpp \
     mainwindow.cpp \
+    serialhelper.cpp \
     software.cpp
 
 HEADERS += \
     app.h \
     mainwindow.h \
+    serialhelper.h \
     software.h
 
 FORMS += \
@@ -29,3 +31,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     img.qrc
+
+DISTFILES += \
+    README.md

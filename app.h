@@ -15,15 +15,15 @@ class App : public QWidget
     Q_OBJECT
 public:
     explicit App(QWidget *parent = nullptr);
-    explicit App(const QString& name, const QString& url = ":/img/qt.png", QWidget *parent = nullptr);
+    explicit App(const QString& name, QWidget *parent = nullptr);
 
 signals:
     void pressed(QString arg);
-    void clicked(Software* app);
+    void clicked(Software* app, QString name);
 
 private:
-    QLabel* m_name;
-    QPushButton* m_appBtn;
+    QLabel* m_name; // app名字
+    QPushButton* m_appBtn;  // app按钮
 };
 
 #endif // APP_H
