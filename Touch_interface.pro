@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets serialport
 
@@ -8,21 +8,20 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += $$PWD/serialhelper/
+INCLUDEPATH += $$PWD/view/
+INCLUDEPATH += $$PWD/musicPlayer/
+
+include($$PWD/serialhelper/serialhelper.pri)
+include($$PWD/view/view.pri)
+include($$PWD/musicPlayer/musicPlayer.pri)
+
 SOURCES += \
-    app.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    serialhelper.cpp \
-    software.cpp
+    main.cpp
 
-HEADERS += \
-    app.h \
-    mainwindow.h \
-    serialhelper.h \
-    software.h
+HEADERS +=
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
