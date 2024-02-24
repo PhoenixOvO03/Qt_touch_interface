@@ -4,61 +4,122 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QtAlgorithms>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
-SerialHelper::SerialHelper(Software *parent)
-    : Software(parent)
+SerialHelper::SerialHelper(QWidget *parent)
+    : Software{parent}
+{
+    interfaceInit();
+    connectInit();
+    timerInit();
+}
+
+void SerialHelper::interfaceInit()
 {
     this->setFixedSize(800, 600);
 
-    areaInit();
-    setupBtnInit();
-    lablesInit();
-    statusBtnInit();
+    // 接收区初始化
+    m_recvArea = new QPlainTextEdit();
+    m_recvArea->setFixedSize(600, 300);
+    m_recvArea->setReadOnly(true);
 
+    // 清空接收区按钮
+    m_clearRecvBtn = new QPushButton("清空接收区");
+    m_clearRecvBtn->setFixedSize(120, 30);
+    m_clearRecvBtn->move(500, 350);
+
+    QHBoxLayout* clearRecvBtn = new QHBoxLayout();
+    clearRecvBtn->addStretch(1);
+    clearRecvBtn->addWidget(m_clearRecvBtn);
+
+    // 发送区初始化
+    m_sendArea = new QPlainTextEdit();
+    m_sendArea->setFixedSize(600, 100);
+
+    // 发送按钮
+    m_sendBtn = new QPushButton("发送");
+    m_sendBtn->setFixedSize(120, 30);
+
+    // 清空发送去按钮
+    m_clearSendBtn = new QPushButton("清空发送区");
+    m_clearSendBtn->setFixedSize(120, 30);
+
+    QHBoxLayout* clearSendBtns = new QHBoxLayout();
+    clearSendBtns->addStretch(1);
+    clearSendBtns->addWidget(m_sendBtn);
+    clearSendBtns->addSpacing(20);
+    clearSendBtns->addWidget(m_clearSendBtn);
+
+    QVBoxLayout* leftBoxLayout = new QVBoxLayout();
+    leftBoxLayout->addWidget(m_recvArea);
+    leftBoxLayout->addLayout(clearRecvBtn);
+    leftBoxLayout->addWidget(m_sendArea);
+    leftBoxLayout->addLayout(clearSendBtns);
+
+    m_portNumber = new SerialComboBox("串口号");
+    m_dataSize = new SerialComboBox("数据位");
+    m_baudRate = new SerialComboBox("波特率");
+    m_stopSize = new SerialComboBox("停止位");
+    m_checkSize = new SerialComboBox("校验位");
+    m_sendMode = new SerialComboBox("发送格式");
+    m_recvMode = new SerialComboBox("接收格式");
+
+    QVBoxLayout* rightBoxLaout = new QVBoxLayout();
+    rightBoxLaout->addWidget(m_portNumber);
+    rightBoxLaout->addWidget(m_dataSize);
+    rightBoxLaout->addWidget(m_baudRate);
+    rightBoxLaout->addWidget(m_stopSize);
+    rightBoxLaout->addWidget(m_checkSize);
+    rightBoxLaout->addWidget(m_sendMode);
+    rightBoxLaout->addWidget(m_recvMode);
+
+    m_startBtn = new QPushButton("连接");
+    m_startBtn->setFixedSize(100, 30);
+
+    m_endBtn = new QPushButton("断开连接");
+    m_endBtn->setFixedSize(100, 30);
+
+    rightBoxLaout->addWidget(m_startBtn);
+    rightBoxLaout->addWidget(m_endBtn);
+
+    QHBoxLayout* allWidget = new QHBoxLayout(this);
+    allWidget->addStretch(1);
+    allWidget->addLayout(leftBoxLayout);
+    allWidget->addStretch(1);
+    allWidget->addLayout(rightBoxLaout);
+    allWidget->addStretch(1);
+
+    m_endBtn->setEnabled(false);
+    m_sendBtn->setEnabled(false);
+}
+
+void SerialHelper::timerInit()
+{
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, [&](){
-        QVector<QString> temp;
+        QStringList temp;
         for (const QSerialPortInfo& info : QSerialPortInfo::availablePorts())
         {
             temp.push_back(info.portName());
         }
         std::sort(temp.begin(), temp.end());
-        if (temp != ports)
+        if (temp != m_ports)
         {
-            this->m_portNumber->clear();
-            this->ports = temp;
-            for (auto& a : ports)
-            {
-                this->m_portNumber->addItem(a);
-            }
+            m_ports = temp;
+            m_portNumber->setItems(m_ports);
         }
     });
     m_timer->start(1000);
 }
 
-void SerialHelper::areaInit()
+void SerialHelper::connectInit()
 {
-    // 接收区初始化
-    m_recvArea = new QPlainTextEdit(this);
-    m_recvArea->setFixedSize(600, 300);
-    m_recvArea->move(20, 30);
-    m_recvArea->setReadOnly(true);
-
-    // 清空接收区按钮
-    m_clearRecvBtn = new QPushButton("清空接收区", this);
-    m_clearRecvBtn->setFixedSize(120, 30);
-    m_clearRecvBtn->move(500, 350);
+    // 清空按钮
     connect(m_clearRecvBtn, &QPushButton::clicked, [&](){m_recvArea->clear();});
-
-    // 发送区初始化
-    m_sendArea = new QPlainTextEdit(this);
-    m_sendArea->setFixedSize(600, 100);
-    m_sendArea->move(20, 410);
+    connect(m_clearSendBtn, &QPushButton::clicked, [&](){m_sendArea->clear();});
 
     // 发送按钮
-    m_sendBtn = new QPushButton("发送", this);
-    m_sendBtn->setFixedSize(120, 30);
-    m_sendBtn->move(350, 530);
     connect(m_sendBtn, &QPushButton::clicked, [&](){
         QString data = m_sendArea->toPlainText();
         if (m_sendMode->currentText() == "HEX")
@@ -80,95 +141,7 @@ void SerialHelper::areaInit()
         }
     });
 
-    // 清空发送去按钮
-    m_clearSendBtn = new QPushButton("清空发送区", this);
-    m_clearSendBtn->setFixedSize(120, 30);
-    m_clearSendBtn->move(500, 530);
-    connect(m_clearSendBtn, &QPushButton::clicked, [&](){m_sendArea->clear();});
-}
-
-void SerialHelper::setupBtnInit()
-{
-    // 端口
-    m_portNumber = new QComboBox(this);
-
-    // 波特率
-    m_baudRate = new QComboBox(this);
-    m_baudRate->addItem("4800");
-    m_baudRate->addItem("9600");
-    m_baudRate->addItem("19200");
-
-    // 数据位
-    m_dataSize = new QComboBox(this);
-    m_dataSize->addItem("8");
-
-    // 停止位
-    m_stopSize = new QComboBox(this);
-    m_stopSize->addItem("1");
-    m_stopSize->addItem("2");
-
-    // 校验位
-    m_checkSize = new QComboBox(this);
-    m_checkSize->addItem("无校验");
-    m_checkSize->addItem("奇校验");
-    m_checkSize->addItem("偶校验");
-
-    // 发送格式
-    m_sendMode = new QComboBox(this);
-    m_sendMode->addItem("HEX");
-    m_sendMode->addItem("文本");
-
-    // 接收格式
-    m_recvMode = new QComboBox(this);
-    m_recvMode->addItem("HEX");
-    m_recvMode->addItem("文本");
-
-    QVector<QComboBox*> setups;
-    setups << m_portNumber << m_baudRate << m_dataSize << m_stopSize << m_checkSize << m_sendMode << m_recvMode;
-
-    for (int i = 0; i < setups.size(); ++i)
-    {
-        setups[i]->setFixedSize(100, 30);
-        setups[i]->move(650, 30 + i * 60);
-    }
-}
-
-void SerialHelper::lablesInit()
-{
-    QLabel* label1 = new QLabel("接收区", this);
-    label1->move(20,10);
-    QLabel* label2 = new QLabel("发送区", this);
-    label2->move(20,390);
-
-    QLabel* portLable = new QLabel("串口号", this);
-    QLabel* baudLable = new QLabel("波特率", this);
-    QLabel* dataLable = new QLabel("数据位", this);
-    QLabel* stopLable = new QLabel("停止位", this);
-    QLabel* checkLable = new QLabel("校验位", this);
-    QLabel* sendLable = new QLabel("发送格式", this);
-    QLabel* recvLable = new QLabel("接收格式", this);
-
-    QVector<QLabel*> labels;
-    labels << portLable << baudLable << dataLable << stopLable << checkLable << sendLable << recvLable;
-    for (int i = 0; i < labels.size(); ++i)
-    {
-        labels[i]->move(660, 10 + i * 60);
-    }
-}
-
-void SerialHelper::statusBtnInit()
-{
-    m_startBtn = new QPushButton("连接", this);
-    m_startBtn->setFixedSize(100, 30);
-    m_startBtn->move(650, 450);
-
-    m_endBtn = new QPushButton("断开连接", this);
-    m_endBtn->setFixedSize(100, 30);
-    m_endBtn->move(650, 510);
-
-    m_endBtn->setEnabled(false);
-    m_sendBtn->setEnabled(false);
-
+    // 连接按钮
     connect(m_startBtn, &QPushButton::clicked, [&](){
         if (m_portNumber->currentText() != "")
         {
@@ -183,6 +156,7 @@ void SerialHelper::statusBtnInit()
         }
     });
 
+    // 断开连接按钮
     connect(m_endBtn, &QPushButton::clicked, [&](){
         m_startBtn->setEnabled(true);
         m_endBtn->setEnabled(false);
@@ -214,8 +188,8 @@ void SerialHelper::UartConnect()
     else if (stop == "2")Stop = QSerialPort::TwoStop;
 
     if (ch == "无校验") Check = QSerialPort::NoParity;
-    if (ch == "奇校验") Check = QSerialPort::OddParity;
-    if (ch == "偶校验") Check = QSerialPort::EvenParity;
+    else if (ch == "奇校验") Check = QSerialPort::OddParity;
+    else if (ch == "偶校验") Check = QSerialPort::EvenParity;
 
     m_serialPort = new QSerialPort(this);
     m_serialPort->setBaudRate(Baud);
@@ -245,23 +219,3 @@ void SerialHelper::UartConnect()
         QMessageBox::critical(this, "串口打开失败", "请确认串口是否连接正确");
     }
 }
-
-// void SerialHelper::timeEvent(QTimerEvent *event)
-// {
-//     QVector<QString> temp;
-//     for (const QSerialPortInfo& info : QSerialPortInfo::availablePorts())
-//     {
-//         temp.push_back(info.portName());
-//     }
-//     qDebug() << temp.size();
-//     std::sort(temp.begin(), temp.end());
-//     if (temp != ports)
-//     {
-//         this->m_portNumber->clear();
-//         this->ports = temp;
-//         for (auto& a : ports)
-//         {
-//             this->m_portNumber->addItem(a);
-//         }
-//     }
-// }

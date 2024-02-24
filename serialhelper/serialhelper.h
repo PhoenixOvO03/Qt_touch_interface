@@ -2,6 +2,7 @@
 #define SERIALHELPER_H
 
 #include "software.h"
+#include "serialcombobox.h"
 
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -14,16 +15,15 @@ class SerialHelper : public Software
 {
     Q_OBJECT
 public:
-    SerialHelper(Software* parent = nullptr);
+    SerialHelper(QWidget* parent = nullptr);
 
-    void areaInit();
-    void setupBtnInit();
-    void lablesInit();
-    void statusBtnInit();
+    void interfaceInit();
+    void timerInit();
+    void connectInit();
+
     void UartConnect();
 
 protected:
-    // void timeEvent(QTimerEvent* event);
 
 private:
     QPlainTextEdit* m_sendArea;   // 发送区
@@ -35,16 +35,16 @@ private:
     QPushButton* m_startBtn;  // 开始按钮
     QPushButton* m_endBtn;    // 结束按钮
 
-    QComboBox* m_portNumber;  // 端口号
-    QComboBox* m_baudRate;    // 波特率
-    QComboBox* m_dataSize;    // 数据位
-    QComboBox* m_stopSize;    // 停止位
-    QComboBox* m_checkSize;   // 校验位
-    QComboBox* m_sendMode;    // 发送模式
-    QComboBox* m_recvMode;    // 接收模式
+    SerialComboBox* m_portNumber;  // 端口号
+    SerialComboBox* m_baudRate;    // 波特率
+    SerialComboBox* m_dataSize;    // 数据位
+    SerialComboBox* m_stopSize;    // 停止位
+    SerialComboBox* m_checkSize;   // 校验位
+    SerialComboBox* m_sendMode;    // 发送模式
+    SerialComboBox* m_recvMode;    // 接收模式
 
     QSerialPort* m_serialPort;    // 串口
-    QVector<QString> ports;
+    QStringList m_ports;
     QTimer* m_timer;
 };
 
