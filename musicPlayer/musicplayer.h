@@ -24,6 +24,12 @@ public:
 
 signals:
 
+
+private slots:
+    void prevMusic();
+    void nextMusic();
+    void volumeBtnClicked();
+
 private:
     MusicPlayerPushButton* m_file;    // 文件
     MusicPlayerPushButton* m_list;    // 列表

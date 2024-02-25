@@ -11,10 +11,14 @@ CONFIG += c++17
 INCLUDEPATH += $$PWD/serialhelper/
 INCLUDEPATH += $$PWD/view/
 INCLUDEPATH += $$PWD/musicPlayer/
+INCLUDEPATH += $$PWD/painterX/
+INCLUDEPATH += $$PWD/customControl/
 
 include($$PWD/serialhelper/serialhelper.pri)
 include($$PWD/view/view.pri)
 include($$PWD/musicPlayer/musicPlayer.pri)
+include($$PWD/painterX/painterX.pri)
+include($$PWD/customControl/customControl.pri)
 
 SOURCES += \
     main.cpp

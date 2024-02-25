@@ -17,8 +17,6 @@ SerialHelper::SerialHelper(QWidget *parent)
 
 void SerialHelper::interfaceInit()
 {
-    this->setFixedSize(800, 600);
-
     // 接收区初始化
     m_recvArea = new QPlainTextEdit();
     m_recvArea->setFixedSize(600, 300);
@@ -116,30 +114,13 @@ void SerialHelper::timerInit()
 void SerialHelper::connectInit()
 {
     // 清空按钮
-    connect(m_clearRecvBtn, &QPushButton::clicked, [&](){m_recvArea->clear();});
-    connect(m_clearSendBtn, &QPushButton::clicked, [&](){m_sendArea->clear();});
+    // connect(m_clearRecvBtn, &QPushButton::clicked, [&](){m_recvArea->clear();});
+    // connect(m_clearSendBtn, &QPushButton::clicked, [&](){m_sendArea->clear();});
+    connect(m_clearRecvBtn, &QPushButton::clicked, m_recvArea, &QPlainTextEdit::clear);
+    connect(m_clearSendBtn, &QPushButton::clicked, m_sendArea, &QPlainTextEdit::clear);
 
     // 发送按钮
-    connect(m_sendBtn, &QPushButton::clicked, [&](){
-        QString data = m_sendArea->toPlainText();
-        if (m_sendMode->currentText() == "HEX")
-        {
-            QByteArray arr;
-            for (int i = 0; i < data.size(); ++i)
-            {
-                if (data[i] == ' ')continue;
-                int num = data.mid(i, 2).toUInt(nullptr, 16);
-                ++i;
-                arr.append(num);
-            }
-
-            m_serialPort->write(arr);
-        }
-        else
-        {
-            m_serialPort->write(data.toLocal8Bit().data());
-        }
-    });
+    connect(m_sendBtn, &QPushButton::clicked, this, &SerialHelper::UartSend);
 
     // 连接按钮
     connect(m_startBtn, &QPushButton::clicked, [&](){
@@ -157,12 +138,7 @@ void SerialHelper::connectInit()
     });
 
     // 断开连接按钮
-    connect(m_endBtn, &QPushButton::clicked, [&](){
-        m_startBtn->setEnabled(true);
-        m_endBtn->setEnabled(false);
-        m_sendBtn->setEnabled(false);
-        m_serialPort->close();
-    });
+    connect(m_endBtn, &QPushButton::clicked, this, &SerialHelper::UartDisconnect);
 }
 
 void SerialHelper::UartConnect()
@@ -218,4 +194,34 @@ void SerialHelper::UartConnect()
     {
         QMessageBox::critical(this, "串口打开失败", "请确认串口是否连接正确");
     }
+}
+
+void SerialHelper::UartSend()
+{
+    QString data = m_sendArea->toPlainText();
+    if (m_sendMode->currentText() == "HEX")
+    {
+        QByteArray arr;
+        for (int i = 0; i < data.size(); ++i)
+        {
+            if (data[i] == ' ')continue;
+            int num = data.mid(i, 2).toUInt(nullptr, 16);
+            ++i;
+            arr.append(num);
+        }
+
+        m_serialPort->write(arr);
+    }
+    else
+    {
+        m_serialPort->write(data.toLocal8Bit().data());
+    }
+}
+
+void SerialHelper::UartDisconnect()
+{
+    m_startBtn->setEnabled(true);
+    m_endBtn->setEnabled(false);
+    m_sendBtn->setEnabled(false);
+    m_serialPort->close();
 }

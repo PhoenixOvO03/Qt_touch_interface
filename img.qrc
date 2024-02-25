@@ -10,5 +10,8 @@
         <file>img/pause.png</file>
         <file>img/prev.png</file>
         <file>img/volume.png</file>
+        <file>img/CustomControl.png</file>
+        <file>img/PainterX.png</file>
+        <file>img/brick.png</file>
     </qresource>
 </RCC>

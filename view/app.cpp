@@ -1,6 +1,8 @@
 #include "app.h"
 #include "serialhelper.h"
 #include "musicplayer.h"
+#include "customcontrol.h"
+#include "painterx.h"
 
 #include <QIcon>
 
@@ -40,7 +42,7 @@ App::App(const QString &name, QWidget *parent)
     if (name == "串口助手")
     {
         m_appBtn->setIcon(QIcon(":/img/SerialHelper.png"));
-        m_description = "串口监听数据、串口发送数据";
+        m_description = "QSerial QComboBox QTimer";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new SerialHelper(), m_name->text(), m_appBtn->icon());
         });
@@ -48,9 +50,25 @@ App::App(const QString &name, QWidget *parent)
     else if (name == "音乐播放器")
     {
         m_appBtn->setIcon(QIcon(":/img/musicPlayer.png"));
-        m_description = "播放音乐";
+        m_description = "QMediaPlayer QAudioOutput QSlider";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new musicPlayer(), m_name->text(), m_appBtn->icon());
+        });
+    }
+    else if (name == "绘图效果预览")
+    {
+        m_appBtn->setIcon(QIcon(":/img/PainterX.png"));
+        m_description = "QPaintEvent QPainter";
+        connect(m_appBtn, &QPushButton::clicked, [&](){
+            emit clicked(new PainterX(), m_name->text(), m_appBtn->icon());
+        });
+    }
+    else if (name == "自定义控件")
+    {
+        m_appBtn->setIcon(QIcon(":/img/CustomControl.png"));
+        m_description = "";
+        connect(m_appBtn, &QPushButton::clicked, [&](){
+            emit clicked(new CustomControl(), m_name->text(), m_appBtn->icon());
         });
     }
     else

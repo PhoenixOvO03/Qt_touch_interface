@@ -19,8 +19,6 @@ musicPlayer::musicPlayer(QWidget *parent)
 
 void musicPlayer::interfaceInit()
 {
-    this->setFixedSize(800, 600);
-
     // 列表窗口
     m_musicList = new QListWidget();
     m_musicList->setFixedSize(700,400);
@@ -128,22 +126,9 @@ void musicPlayer::connectInit()
     });
 
     // 上一曲
-    connect(m_prev, &QPushButton::clicked, [&](){
-        if (m_playList.empty())return;
-        m_currentPlayIndex = (m_currentPlayIndex + m_playList.size() - 1) % m_playList.size();
-        m_musicList->setCurrentRow(m_currentPlayIndex);
-        m_player->setSource(m_playList[m_currentPlayIndex]);
-        m_player->play();
-    });
-
+    connect(m_prev, &QPushButton::clicked, this, &musicPlayer::prevMusic);
     // 下一曲
-    connect(m_next, &QPushButton::clicked, [&](){
-        if (m_playList.empty())return;
-        m_currentPlayIndex = (m_currentPlayIndex + 1) % m_playList.size();
-        m_musicList->setCurrentRow(m_currentPlayIndex);
-        m_player->setSource(m_playList[m_currentPlayIndex]);
-        m_player->play();
-    });
+    connect(m_next, &QPushButton::clicked, this, &musicPlayer::nextMusic);
 
     // 双击播放音乐列表
     connect(m_musicList, &QAbstractItemView::doubleClicked, [&](const QModelIndex &index){
@@ -153,14 +138,7 @@ void musicPlayer::connectInit()
     });
 
     // 音量按钮
-    connect(m_volume, &QPushButton::clicked, [&](){
-        QPoint pos = m_volume->pos();
-        int x = pos.x() + m_volume->width() / 2 - m_volumeProgress->width() / 2;
-        int y = pos.y() - m_volumeProgress->height();
-        m_volumeProgress->move(x, y);
-        bool visit = m_volumeProgress->isVisible();
-        m_volumeProgress->setVisible(!visit);
-    });
+    connect(m_volume, &QPushButton::clicked, this, &musicPlayer::volumeBtnClicked);
 
     // 获取播放时长
     connect(m_player, &QMediaPlayer::durationChanged, [&](qint64 duration){
@@ -181,4 +159,32 @@ void musicPlayer::connectInit()
     connect(m_volumeProgress, &QSlider::sliderMoved, [&](int position){
         m_output->setVolume(position*1.0 / 100);
     });
+}
+
+void musicPlayer::prevMusic()
+{
+    if (m_playList.empty())return;
+    m_currentPlayIndex = (m_currentPlayIndex + m_playList.size() - 1) % m_playList.size();
+    m_musicList->setCurrentRow(m_currentPlayIndex);
+    m_player->setSource(m_playList[m_currentPlayIndex]);
+    m_player->play();
+}
+
+void musicPlayer::nextMusic()
+{
+    if (m_playList.empty())return;
+    m_currentPlayIndex = (m_currentPlayIndex + 1) % m_playList.size();
+    m_musicList->setCurrentRow(m_currentPlayIndex);
+    m_player->setSource(m_playList[m_currentPlayIndex]);
+    m_player->play();
+}
+
+void musicPlayer::volumeBtnClicked()
+{
+    QPoint pos = m_volume->pos();
+    int x = pos.x() + m_volume->width() / 2 - m_volumeProgress->width() / 2;
+    int y = pos.y() - m_volumeProgress->height();
+    m_volumeProgress->move(x, y);
+    bool visit = m_volumeProgress->isVisible();
+    m_volumeProgress->setVisible(!visit);
 }

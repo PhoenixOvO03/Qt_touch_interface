@@ -21,9 +21,12 @@ public:
     void timerInit();
     void connectInit();
 
-    void UartConnect();
-
 protected:
+
+private slots:
+    void UartConnect();
+    void UartSend();
+    void UartDisconnect();
 
 private:
     QPlainTextEdit* m_sendArea;   // 发送区

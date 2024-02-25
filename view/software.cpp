@@ -7,5 +7,4 @@ Software::Software(QWidget *parent)
 {
     this->hide();
     this->setFixedSize(800,600);
-    // new QLabel("this is a app", this);
 }

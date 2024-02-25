@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::appBottonInit()
 {
-    m_appList << new App("串口助手") << new App("音乐播放器") << new App("null") << new App("null")
+    m_appList << new App("串口助手") << new App("音乐播放器") << new App("绘图效果预览") << new App("自定义控件")
               << new App("null") << new App("null") << new App("null") << new App("null")
               << new App("null") << new App("null") << new App("null") << new App("null");
 
