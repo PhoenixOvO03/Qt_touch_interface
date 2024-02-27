@@ -16,8 +16,8 @@ enum Shape{
     Polygon_,       // 多边形
 
     Arc_,           // 圆弧
-    Pie_,
-    Chord_,
+    Pie_,           // 饼图
+    Chord_,         // 弦图
 
     Path_,          // 路径
 
@@ -34,9 +34,12 @@ public:
     void setShape(Shape shape);
     void setPen(QPen pen);
     void setBrush(QColor color, Qt::BrushStyle style);
+    void setAntialias(bool antialias);
+    void setTransform(bool transform);
 
 protected:
-    void paintEvent(QPaintEvent* event);
+    void extracted();
+    void paintEvent(QPaintEvent *event);
 
 signals:
 
@@ -44,6 +47,8 @@ private:
     Shape m_shape;
     QPen m_pen;
     QBrush m_brush;
+    bool m_antialias;
+    bool m_transform;
 };
 
 #endif // PAINTWIDGET_H

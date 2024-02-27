@@ -5,11 +5,13 @@
 #include "painterx.h"
 
 #include <QIcon>
+#include <QPainter>
 
 App::App(QWidget *parent)
     : QWidget{parent}
 {
     this->setFixedSize(200,200);
+    m_isHover = false;
 
     m_name = new QLabel("app");
     m_appBtn = new QPushButton();
@@ -58,7 +60,7 @@ App::App(const QString &name, QWidget *parent)
     else if (name == "绘图效果预览")
     {
         m_appBtn->setIcon(QIcon(":/img/PainterX.png"));
-        m_description = "QPaintEvent QPainter";
+        m_description = "QPaintEvent QPainter QBrush";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new PainterX(), m_name->text(), m_appBtn->icon());
         });
@@ -66,7 +68,7 @@ App::App(const QString &name, QWidget *parent)
     else if (name == "自定义控件")
     {
         m_appBtn->setIcon(QIcon(":/img/CustomControl.png"));
-        m_description = "";
+        m_description = "QPaintEvent QPainter QBrush";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new CustomControl(), m_name->text(), m_appBtn->icon());
         });
@@ -76,7 +78,29 @@ App::App(const QString &name, QWidget *parent)
         m_appBtn->setIcon(QIcon(":/img/qt.png"));
         m_description = "暂无app";
     }
+}
 
-    connect(m_appBtn, &QAbstractButton::pressed, [&](){emit pressed(m_description);});
+void App::enterEvent(QEnterEvent *event)
+{
+    emit pressed(m_description);
+    m_isHover = true;
+    update();
+}
 
+void App::leaveEvent(QEvent *event)
+{
+    emit pressed("");
+    m_isHover = false;
+    update();
+}
+
+void App::paintEvent(QPaintEvent *event)
+{
+    if (m_isHover)
+    {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setPen(QPen(Qt::black, 5));
+        painter.drawRect(m_appBtn->pos().x()-1, m_appBtn->pos().y()-1, 102, 102);
+    }
 }

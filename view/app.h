@@ -21,7 +21,14 @@ signals:
     void pressed(QString arg);
     void clicked(Software* app, QString name, QIcon icon);
 
+protected:
+    void enterEvent(QEnterEvent* event);
+    void leaveEvent(QEvent* event);
+    void paintEvent(QPaintEvent* event);
+
 private:
+    bool m_isHover;
+
     QLabel* m_name; // app名字
     QPushButton* m_appBtn;  // app按钮
     QString m_description;  // app描述

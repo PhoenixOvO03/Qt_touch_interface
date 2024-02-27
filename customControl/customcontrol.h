@@ -2,6 +2,7 @@
 #define CUSTOMCONTROL_H
 
 #include "software.h"
+#include "myswitchbutton.h"
 
 #include <QWidget>
 
@@ -12,6 +13,9 @@ public:
     explicit CustomControl(QWidget *parent = nullptr);
 
 signals:
+
+private:
+    MySwitchButton* m_switchButton;
 };
 
 #endif // CUSTOMCONTROL_H

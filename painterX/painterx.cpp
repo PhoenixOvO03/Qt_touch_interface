@@ -19,6 +19,8 @@ PainterX::PainterX(QWidget *parent)
     shapeChanged(0);
     penChanged();
     brushChanged();
+    m_paintWidget->setAntialias(false);
+    m_paintWidget->setTransform(false);
 }
 
 void PainterX::interfaceInit()
@@ -79,11 +81,11 @@ void PainterX::interfaceInit()
     brushBox->setLayout(brushLayout);
 
     // 高级选项
-    m_chenge = new QCheckBox("变换（旋转、缩放）");
+    m_change = new QCheckBox("变换（旋转、缩放）");
     m_antiAliasing = new QCheckBox("抗锯齿");
 
     QVBoxLayout* moreSettingLayout = new QVBoxLayout();
-    moreSettingLayout->addWidget(m_chenge);
+    moreSettingLayout->addWidget(m_change);
     moreSettingLayout->addWidget(m_antiAliasing);
 
     QGroupBox* moreSetting = new QGroupBox("高级选项");
@@ -112,23 +114,23 @@ void PainterX::itemInit()
     m_shapeComboBox->addItem("椭圆", static_cast<int>(Shape::Ellipse_));
     m_shapeComboBox->addItem("多边线", static_cast<int>(Shape::Polyline_));
     m_shapeComboBox->addItem("多边形", static_cast<int>(Shape::Polygon_));
-    m_shapeComboBox->addItem("Arc", static_cast<int>(Shape::Arc_));
-    m_shapeComboBox->addItem("Pie", static_cast<int>(Shape::Pie_));
-    m_shapeComboBox->addItem("Chord", static_cast<int>(Shape::Chord_));
-    m_shapeComboBox->addItem("Path", static_cast<int>(Shape::Path_));
-    m_shapeComboBox->addItem("Text", static_cast<int>(Shape::Text_));
-    m_shapeComboBox->addItem("Pixmap", static_cast<int>(Shape::Pixmap_));
+    m_shapeComboBox->addItem("圆弧", static_cast<int>(Shape::Arc_));
+    m_shapeComboBox->addItem("饼图", static_cast<int>(Shape::Pie_));
+    m_shapeComboBox->addItem("弦图", static_cast<int>(Shape::Chord_));
+    m_shapeComboBox->addItem("贝瑟尔曲线", static_cast<int>(Shape::Path_));
+    m_shapeComboBox->addItem("文本", static_cast<int>(Shape::Text_));
+    m_shapeComboBox->addItem("图片", static_cast<int>(Shape::Pixmap_));
 
     // 宽度
     m_widthSpin->setRange(1, 10);
 
     // 线的形状
-    m_penStyleLCombBox->addItem("Solid", static_cast<int>(Qt::SolidLine));
-    m_penStyleLCombBox->addItem("Dash", static_cast<int>(Qt::DashLine));
-    m_penStyleLCombBox->addItem("Dot", static_cast<int>(Qt::DotLine));
-    m_penStyleLCombBox->addItem("DashDot", static_cast<int>(Qt::DashDotLine));
-    m_penStyleLCombBox->addItem("DashDotDot", static_cast<int>(Qt::DashDotDotLine));
-    m_penStyleLCombBox->addItem("CustomDash", static_cast<int>(Qt::CustomDashLine));
+    m_penStyleLCombBox->addItem("实线", static_cast<int>(Qt::SolidLine));
+    m_penStyleLCombBox->addItem("虚线", static_cast<int>(Qt::DashLine));
+    m_penStyleLCombBox->addItem("点线", static_cast<int>(Qt::DotLine));
+    m_penStyleLCombBox->addItem("虚线和点", static_cast<int>(Qt::DashDotLine));
+    m_penStyleLCombBox->addItem("虚线和两个点", static_cast<int>(Qt::DashDotDotLine));
+    m_penStyleLCombBox->addItem("无", static_cast<int>(Qt::CustomDashLine));
 
     // 连接
     m_connectCombBox->addItem("Miter", static_cast<int>(Qt::MiterJoin));
@@ -175,6 +177,10 @@ void PainterX::connectInit()
     // 笔刷设置
     connect(m_brushColorBtn, &QPushButton::clicked, this, &PainterX::brushColorChanged);
     connect(m_brushStyleLCombBox, &QComboBox::activated, this, &PainterX::brushChanged);
+    // 高级选项
+    // connect(m_antiAliasing, &QCheckBox::toggled, this, &PainterX::antialiasChanged);
+    connect(m_antiAliasing, &QCheckBox::toggled, m_paintWidget, &PaintWidget::setAntialias);
+    connect(m_change, &QCheckBox::toggled, m_paintWidget, &PaintWidget::setTransform);
 }
 
 void PainterX::dataInit()
@@ -184,6 +190,10 @@ void PainterX::dataInit()
     m_penColorBtn->setPalette(pal);
     m_penColorBtn->setAutoFillBackground(true);
     m_penColorBtn->setFlat(true);
+
+    m_brushColorBtn->setPalette(pal);
+    m_brushColorBtn->setAutoFillBackground(true);
+    m_brushColorBtn->setFlat(true);
 }
 
 void PainterX::shapeChanged(int index)
@@ -222,9 +232,6 @@ void PainterX::brushColorChanged()
     if (!color.isValid())return;
     QPalette pal = m_brushColorBtn->palette();
     pal.setColor(QPalette::Button, color);
-    m_brushColorBtn->setPalette(pal);
-    m_brushColorBtn->setAutoFillBackground(true);
-    m_brushColorBtn->setFlat(true);
 
     brushChanged();
 }

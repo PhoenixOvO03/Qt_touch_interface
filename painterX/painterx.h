@@ -50,7 +50,7 @@ private:
     QComboBox* m_brushStyleLCombBox;
 
     // 高级选项
-    QCheckBox* m_chenge;
+    QCheckBox* m_change;
     QCheckBox* m_antiAliasing;
 };
 

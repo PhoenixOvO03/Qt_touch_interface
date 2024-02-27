@@ -26,7 +26,7 @@ void MainWindow::appBottonInit()
     for (int i = 0; i < 12; ++i)
     {
         connect(m_appList.at(i), &App::pressed, [&](QString arg){
-            ui->statusbar->showMessage(arg, 4000);
+            ui->statusbar->showMessage(arg);
         });
         connect(m_appList.at(i), &App::clicked, [&](Software* app, QString name, QIcon icon){
             this->setWindowIcon(icon);
