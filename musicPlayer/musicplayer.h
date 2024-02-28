@@ -4,14 +4,13 @@
 #include "software.h"
 #include "musicplayerpushbutton.h"
 
-#include <QPushButton>
-#include <QListWidget>
-#include <QSlider>
-#include <QMediaPlayer>
-#include <QAudioOutput>
 #include <QUrl>
-#include <QVector>
-#include <QLabel>
+
+class QAudioOutput;
+class QMediaPlayer;
+class QLabel;
+class QSlider;
+class QListWidget;
 
 class musicPlayer : public Software
 {
@@ -19,16 +18,16 @@ class musicPlayer : public Software
 public:
     explicit musicPlayer(QWidget *parent = nullptr);
 
-    void interfaceInit();
-    void connectInit();
+    void interfaceInit();   // 界面初始化
+    void connectInit();     // connect函数初始化
 
 signals:
 
 
 private slots:
-    void prevMusic();
-    void nextMusic();
-    void volumeBtnClicked();
+    void prevMusic();   // 上一曲
+    void nextMusic();   // 下一曲
+    void volumeBtnClicked();    // 音量按钮
 
 private:
     MusicPlayerPushButton* m_file;    // 文件

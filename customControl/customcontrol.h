@@ -3,6 +3,7 @@
 
 #include "software.h"
 #include "myswitchbutton.h"
+#include "mysliderhundred.h"
 
 #include <QWidget>
 
@@ -15,7 +16,8 @@ public:
 signals:
 
 private:
-    MySwitchButton* m_switchButton;
+    MySwitchButton* m_switchButton;     // 开关按钮
+    MySliderHundred* m_sliderHundred;   // 滑块
 };
 
 #endif // CUSTOMCONTROL_H

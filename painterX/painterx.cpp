@@ -1,4 +1,5 @@
 #include "painterx.h"
+#include "paintwidget.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -7,20 +8,19 @@
 #include <QGroupBox>
 #include <QColorDialog>
 #include <QPen>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QPushButton>
+#include <QCheckBox>
 
 PainterX::PainterX(QWidget *parent)
     : Software{parent}
 {
+    // 初始化
     interfaceInit();
     itemInit();
     connectInit();
     dataInit();
-
-    shapeChanged(0);
-    penChanged();
-    brushChanged();
-    m_paintWidget->setAntialias(false);
-    m_paintWidget->setTransform(false);
 }
 
 void PainterX::interfaceInit()
@@ -50,6 +50,7 @@ void PainterX::interfaceInit()
     QLabel* endLable = new QLabel("末端");
     m_endCombBox = new QComboBox();
 
+    // 画笔设置布局
     QGridLayout* painterLayout = new QGridLayout();
     painterLayout->addWidget(widthLabel, 0,0,1,1);
     painterLayout->addWidget(m_widthSpin,0,1,1,1);
@@ -71,6 +72,7 @@ void PainterX::interfaceInit()
     QLabel* brushStyleLable = new QLabel("样式");
     m_brushStyleLCombBox = new QComboBox();
 
+    // 画刷设置布局
     QGridLayout* brushLayout = new QGridLayout();
     brushLayout->addWidget(brushColorLable,0,0,1,1);
     brushLayout->addWidget(m_brushColorBtn,0,1,1,1);
@@ -107,19 +109,19 @@ void PainterX::interfaceInit()
 void PainterX::itemInit()
 {
     // 形状
-    m_shapeComboBox->addItem("点", static_cast<int>(Shape::Point_));
-    m_shapeComboBox->addItem("线", static_cast<int>(Shape::Line_));
-    m_shapeComboBox->addItem("矩形", static_cast<int>(Shape::Rect_));
-    m_shapeComboBox->addItem("圆角矩形", static_cast<int>(Shape::RoundedRect_));
-    m_shapeComboBox->addItem("椭圆", static_cast<int>(Shape::Ellipse_));
-    m_shapeComboBox->addItem("多边线", static_cast<int>(Shape::Polyline_));
-    m_shapeComboBox->addItem("多边形", static_cast<int>(Shape::Polygon_));
-    m_shapeComboBox->addItem("圆弧", static_cast<int>(Shape::Arc_));
-    m_shapeComboBox->addItem("饼图", static_cast<int>(Shape::Pie_));
-    m_shapeComboBox->addItem("弦图", static_cast<int>(Shape::Chord_));
-    m_shapeComboBox->addItem("贝瑟尔曲线", static_cast<int>(Shape::Path_));
-    m_shapeComboBox->addItem("文本", static_cast<int>(Shape::Text_));
-    m_shapeComboBox->addItem("图片", static_cast<int>(Shape::Pixmap_));
+    m_shapeComboBox->addItem("点", static_cast<int>(PaintWidget::Point_));
+    m_shapeComboBox->addItem("线", static_cast<int>(PaintWidget::Line_));
+    m_shapeComboBox->addItem("矩形", static_cast<int>(PaintWidget::Rect_));
+    m_shapeComboBox->addItem("圆角矩形", static_cast<int>(PaintWidget::RoundedRect_));
+    m_shapeComboBox->addItem("椭圆", static_cast<int>(PaintWidget::Ellipse_));
+    m_shapeComboBox->addItem("多边线", static_cast<int>(PaintWidget::Polyline_));
+    m_shapeComboBox->addItem("多边形", static_cast<int>(PaintWidget::Polygon_));
+    m_shapeComboBox->addItem("圆弧", static_cast<int>(PaintWidget::Arc_));
+    m_shapeComboBox->addItem("饼图", static_cast<int>(PaintWidget::Pie_));
+    m_shapeComboBox->addItem("弦图", static_cast<int>(PaintWidget::Chord_));
+    m_shapeComboBox->addItem("贝瑟尔曲线", static_cast<int>(PaintWidget::Path_));
+    m_shapeComboBox->addItem("文本", static_cast<int>(PaintWidget::Text_));
+    m_shapeComboBox->addItem("图片", static_cast<int>(PaintWidget::Pixmap_));
 
     // 宽度
     m_widthSpin->setRange(1, 10);
@@ -185,20 +187,31 @@ void PainterX::connectInit()
 
 void PainterX::dataInit()
 {
+    // 设置黑色
     QPalette pal = m_penColorBtn->palette();
     pal.setColor(QPalette::Button, QColor(0,0,0));
+
+    // 画笔设置黑色
     m_penColorBtn->setPalette(pal);
     m_penColorBtn->setAutoFillBackground(true);
     m_penColorBtn->setFlat(true);
 
+    // 画刷设置黑色
     m_brushColorBtn->setPalette(pal);
     m_brushColorBtn->setAutoFillBackground(true);
     m_brushColorBtn->setFlat(true);
+
+    // 设置信息传输到绘画界面中
+    shapeChanged(0);
+    penChanged();
+    brushChanged();
+    m_paintWidget->setAntialias(false);
+    m_paintWidget->setTransform(false);
 }
 
 void PainterX::shapeChanged(int index)
 {
-    Shape shape = (Shape)m_shapeComboBox->itemData(index).toInt();
+    PaintWidget::Shape shape = (PaintWidget::Shape)m_shapeComboBox->itemData(index).toInt();
     m_paintWidget->setShape(shape);
 }
 
@@ -232,6 +245,9 @@ void PainterX::brushColorChanged()
     if (!color.isValid())return;
     QPalette pal = m_brushColorBtn->palette();
     pal.setColor(QPalette::Button, color);
+    m_brushColorBtn->setPalette(pal);
+    m_brushColorBtn->setAutoFillBackground(true);
+    m_brushColorBtn->setFlat(true);
 
     brushChanged();
 }

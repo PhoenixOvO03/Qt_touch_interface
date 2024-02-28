@@ -6,29 +6,35 @@
 
 #include <QIcon>
 #include <QPainter>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
 
 App::App(QWidget *parent)
     : QWidget{parent}
 {
     this->setFixedSize(200,200);
-    m_isHover = false;
 
+    // 初始化成员
     m_name = new QLabel("app");
     m_appBtn = new QPushButton();
     m_appBtn->setFixedSize(100,100);
     m_appBtn->setIconSize(QSize(100,100));
     m_appBtn->setFlat(true);
 
+    // 按钮居中
     QHBoxLayout* hLayout_btn = new QHBoxLayout();
     hLayout_btn->addStretch(1);
     hLayout_btn->addWidget(m_name);
     hLayout_btn->addStretch(1);
 
+    // 名字居中
     QHBoxLayout* hLayout_name = new QHBoxLayout();
     hLayout_name->addStretch(1);
     hLayout_name->addWidget(m_appBtn);
     hLayout_name->addStretch(1);
 
+    // 整体居中
     QVBoxLayout* vLayout = new QVBoxLayout(this);
     vLayout->addStretch(1);
     vLayout->addLayout(hLayout_name);
@@ -41,6 +47,8 @@ App::App(const QString &name, QWidget *parent)
 {
     m_name->setText(name);
 
+    // 根据名字设置app相关消息
+    // 根据名字设置对应software
     if (name == "串口助手")
     {
         m_appBtn->setIcon(QIcon(":/img/SerialHelper.png"));
@@ -82,25 +90,18 @@ App::App(const QString &name, QWidget *parent)
 
 void App::enterEvent(QEnterEvent *event)
 {
+    // 鼠标进入按钮放大、显示详情
+    m_appBtn->setFixedSize(140,140);
+    m_appBtn->setIconSize(QSize(140,140));
     emit pressed(m_description);
-    m_isHover = true;
     update();
 }
 
 void App::leaveEvent(QEvent *event)
 {
+    // 鼠标离开按钮复原、关闭详情
+    m_appBtn->setFixedSize(100,100);
+    m_appBtn->setIconSize(QSize(100,100));
     emit pressed("");
-    m_isHover = false;
     update();
-}
-
-void App::paintEvent(QPaintEvent *event)
-{
-    if (m_isHover)
-    {
-        QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.setPen(QPen(Qt::black, 5));
-        painter.drawRect(m_appBtn->pos().x()-1, m_appBtn->pos().y()-1, 102, 102);
-    }
 }

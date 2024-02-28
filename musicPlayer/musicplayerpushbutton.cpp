@@ -10,6 +10,7 @@ MusicPlayerPushButton::MusicPlayerPushButton(QWidget *parent)
 MusicPlayerPushButton::MusicPlayerPushButton(QString type, QWidget *parent)
     : MusicPlayerPushButton(parent)
 {
+    // 根据名字设置图标
     if (type == "文件")
     {
         this->setIcon(QIcon(":/img/file.png"));

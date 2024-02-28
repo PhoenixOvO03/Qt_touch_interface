@@ -1,14 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "app.h"
-#include "software.h"
-
 #include <QMainWindow>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QVector>
-#include <QKeyEvent>
+
+class App;
+class Software;
+class QVBoxLayout;
+class QHBoxLayout;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,10 +22,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    // 软件按钮初始化
-    void appBottonInit();
-    // 界面初始化
-    void interfaceInit();
+    void appBottonInit();   // 软件按钮初始化
+    void interfaceInit();   // 界面初始化
 
 protected:
     void keyPressEvent(QKeyEvent *event);

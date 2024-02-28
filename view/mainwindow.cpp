@@ -1,6 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "app.h"
+#include "software.h"
+
+#include <QKeyEvent>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -18,6 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::appBottonInit()
 {
+    // 按钮数组初始化
     m_appList << new App("串口助手") << new App("音乐播放器") << new App("绘图效果预览") << new App("自定义控件")
               << new App("null") << new App("null") << new App("null") << new App("null")
               << new App("null") << new App("null") << new App("null") << new App("null");
@@ -46,17 +54,19 @@ void MainWindow::interfaceInit()
     this->setWindowTitle("Touch_interface");
     this->setWindowIcon(QIcon(":/img/qt.png"));
 
-    // 每一层添加app
+    // 每一层App
     m_firstFloor = new QHBoxLayout();
     m_firstFloor->addStretch(1);
     for (int i = 0;i < 4; ++i)m_firstFloor->addWidget(m_appList.at(i));
     m_firstFloor->addStretch(1);
 
+    // 第二层App
     m_secondFloor = new QHBoxLayout();
     m_secondFloor->addStretch(1);
     for (int i = 4;i < 8; ++i)m_secondFloor->addWidget(m_appList.at(i));
     m_secondFloor->addStretch(1);
 
+    // 第三层App
     m_thirdFllor = new QHBoxLayout();
     m_thirdFllor->addStretch(1);
     for (int i = 8;i < 12; ++i)m_thirdFllor->addWidget(m_appList.at(i));

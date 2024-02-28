@@ -1,4 +1,5 @@
 #include "serialhelper.h"
+#include "serialcombobox.h"
 
 #include <QLabel>
 #include <QMessageBox>
@@ -6,10 +7,13 @@
 #include <QtAlgorithms>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QTimer>
+#include <QSerialPortInfo>
 
 SerialHelper::SerialHelper(QWidget *parent)
     : Software{parent}
 {
+    // 初始化
     interfaceInit();
     connectInit();
     timerInit();
@@ -55,6 +59,7 @@ void SerialHelper::interfaceInit()
     leftBoxLayout->addWidget(m_sendArea);
     leftBoxLayout->addLayout(clearSendBtns);
 
+    // combobox初始化
     m_portNumber = new SerialComboBox("串口号");
     m_dataSize = new SerialComboBox("数据位");
     m_baudRate = new SerialComboBox("波特率");
@@ -97,12 +102,13 @@ void SerialHelper::timerInit()
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, [&](){
         QStringList temp;
+        // 当前所有通信端口
         for (const QSerialPortInfo& info : QSerialPortInfo::availablePorts())
         {
             temp.push_back(info.portName());
         }
         std::sort(temp.begin(), temp.end());
-        if (temp != m_ports)
+        if (temp != m_ports)    // 如果端口更新
         {
             m_ports = temp;
             m_portNumber->setItems(m_ports);
@@ -114,8 +120,6 @@ void SerialHelper::timerInit()
 void SerialHelper::connectInit()
 {
     // 清空按钮
-    // connect(m_clearRecvBtn, &QPushButton::clicked, [&](){m_recvArea->clear();});
-    // connect(m_clearSendBtn, &QPushButton::clicked, [&](){m_sendArea->clear();});
     connect(m_clearRecvBtn, &QPushButton::clicked, m_recvArea, &QPlainTextEdit::clear);
     connect(m_clearSendBtn, &QPushButton::clicked, m_sendArea, &QPlainTextEdit::clear);
 
@@ -143,17 +147,20 @@ void SerialHelper::connectInit()
 
 void SerialHelper::UartConnect()
 {
+    // 存储信息
     QSerialPort::BaudRate Baud;
     QSerialPort::DataBits Data;
     QSerialPort::StopBits Stop;
     QSerialPort::Parity Check;
 
+    // 获取消息
     QString port = m_portNumber->currentText();
     QString baud = m_baudRate->currentText();
     QString data = m_dataSize->currentText();
     QString stop = m_stopSize->currentText();
     QString ch = m_checkSize->currentText();
 
+    // 连接所用消息初始化
     if (baud == "4800") Baud = QSerialPort::Baud4800;
     else if (baud == "9600") Baud = QSerialPort::Baud9600;
     else if (baud == "19200") Baud = QSerialPort::Baud19200;
@@ -167,6 +174,7 @@ void SerialHelper::UartConnect()
     else if (ch == "奇校验") Check = QSerialPort::OddParity;
     else if (ch == "偶校验") Check = QSerialPort::EvenParity;
 
+    // 设置获取到的消息
     m_serialPort = new QSerialPort(this);
     m_serialPort->setBaudRate(Baud);
     m_serialPort->setDataBits(Data);
@@ -174,6 +182,7 @@ void SerialHelper::UartConnect()
     m_serialPort->setStopBits(Stop);
     m_serialPort->setPortName(port);
 
+    // 打开串口
     if (m_serialPort->open(QSerialPort::ReadWrite))
     {
         connect(m_serialPort, &QSerialPort::readyRead, [&](){
@@ -220,6 +229,7 @@ void SerialHelper::UartSend()
 
 void SerialHelper::UartDisconnect()
 {
+    // 断开连接并设置按钮的不可点击
     m_startBtn->setEnabled(true);
     m_endBtn->setEnabled(false);
     m_sendBtn->setEnabled(false);

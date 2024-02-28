@@ -1,14 +1,11 @@
 #ifndef APP_H
 #define APP_H
 
-#include "software.h"
-
 #include <QWidget>
-#include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QString>
+
+class Software;
+class QLabel;
+class QPushButton;
 
 class App : public QWidget
 {
@@ -24,11 +21,8 @@ signals:
 protected:
     void enterEvent(QEnterEvent* event);
     void leaveEvent(QEvent* event);
-    void paintEvent(QPaintEvent* event);
 
 private:
-    bool m_isHover;
-
     QLabel* m_name; // app名字
     QPushButton* m_appBtn;  // app按钮
     QString m_description;  // app描述

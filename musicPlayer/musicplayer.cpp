@@ -4,10 +4,15 @@
 #include <QDir>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QListWidget>
+#include <QLabel>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 musicPlayer::musicPlayer(QWidget *parent)
     : Software{parent}
 {
+    // 成员初始化
     m_currentPlayIndex = 0;
     m_output = new QAudioOutput(this);
     m_player = new QMediaPlayer(this);

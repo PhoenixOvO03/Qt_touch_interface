@@ -1,8 +1,12 @@
 #include "serialcombobox.h"
 
+#include <QLabel>
+#include <QComboBox>
+
 SerialComboBox::SerialComboBox(QWidget *parent)
     : QWidget{parent}
 {
+    // 界面初始化
     this->setFixedSize(100, 50);
     m_label = new QLabel(this);
     m_comboBox = new QComboBox(this);
@@ -15,6 +19,7 @@ SerialComboBox::SerialComboBox(QString name, QWidget *parent)
 {
     m_label->setText(name);
 
+    // 根据名字选择初始化参数
     if (name == "波特率")
     {
         setItems(QStringList() << "4800" << "9600" << "19200");

@@ -2,13 +2,12 @@
 #define PAINTERX_H
 
 #include "software.h"
-#include "paintwidget.h"
 
-#include <QWidget>
-#include <QSpinBox>
-#include <QPushButton>
-#include <QCheckBox>
-#include <QComboBox>
+class QComboBox;
+class QSpinBox;
+class QPushButton;
+class QCheckBox;
+class PaintWidget;
 
 class PainterX : public Software
 {
@@ -16,27 +15,25 @@ class PainterX : public Software
 public:
     explicit PainterX(QWidget *parent = nullptr);
 
-    void interfaceInit();
-    void itemInit();
-    void connectInit();
-    void dataInit();
+    void interfaceInit();   // 界面初始化
+    void itemInit();        // combobox数据初始化
+    void connectInit();     // connect函数初始化
+    void dataInit();        // 数据初始化
 
 signals:
 
 private slots:
-    void shapeChanged(int index);
-    void penChanged();
-    void colorChanged();
+    void shapeChanged(int index);   // 绘制图案更改
+    void penChanged();              // 画笔更改
+    void colorChanged();            // 画笔颜色更改
 
-    void brushColorChanged();
-    void brushChanged();
+    void brushColorChanged();       // 笔刷颜色更改
+    void brushChanged();            // 笔刷更改
 
 private:
-    // 图形形状
-    QComboBox* m_shapeComboBox;
+    QComboBox* m_shapeComboBox; // 图形形状
 
-    // 绘图区域
-    PaintWidget* m_paintWidget;
+    PaintWidget* m_paintWidget; // 绘图区域
 
     // 画笔设置
     QSpinBox* m_widthSpin;

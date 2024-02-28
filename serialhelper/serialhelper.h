@@ -2,14 +2,12 @@
 #define SERIALHELPER_H
 
 #include "software.h"
-#include "serialcombobox.h"
 
 #include <QPlainTextEdit>
 #include <QPushButton>
-#include <QComboBox>
 #include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QTimer>
+
+class SerialComboBox;
 
 class SerialHelper : public Software
 {
@@ -17,16 +15,16 @@ class SerialHelper : public Software
 public:
     SerialHelper(QWidget* parent = nullptr);
 
-    void interfaceInit();
-    void timerInit();
-    void connectInit();
+    void interfaceInit();   // 界面初始化
+    void timerInit();       // 定时器初始化
+    void connectInit();     // connect函数初始化
 
 protected:
 
 private slots:
-    void UartConnect();
-    void UartSend();
-    void UartDisconnect();
+    void UartConnect();     // Uart连接
+    void UartSend();        // Uart传输数据
+    void UartDisconnect();  // Uart断开连接
 
 private:
     QPlainTextEdit* m_sendArea;   // 发送区
@@ -38,17 +36,17 @@ private:
     QPushButton* m_startBtn;  // 开始按钮
     QPushButton* m_endBtn;    // 结束按钮
 
-    SerialComboBox* m_portNumber;  // 端口号
-    SerialComboBox* m_baudRate;    // 波特率
-    SerialComboBox* m_dataSize;    // 数据位
-    SerialComboBox* m_stopSize;    // 停止位
-    SerialComboBox* m_checkSize;   // 校验位
-    SerialComboBox* m_sendMode;    // 发送模式
-    SerialComboBox* m_recvMode;    // 接收模式
+    SerialComboBox* m_portNumber;   // 端口号
+    SerialComboBox* m_baudRate;     // 波特率
+    SerialComboBox* m_dataSize;     // 数据位
+    SerialComboBox* m_stopSize;     // 停止位
+    SerialComboBox* m_checkSize;    // 校验位
+    SerialComboBox* m_sendMode;     // 发送模式
+    SerialComboBox* m_recvMode;     // 接收模式
 
-    QSerialPort* m_serialPort;    // 串口
-    QStringList m_ports;
-    QTimer* m_timer;
+    QSerialPort* m_serialPort;      // 串口
+    QStringList m_ports;            // 端口
+    QTimer* m_timer;                // 定时器
 };
 
 #endif // SERIALHELPER_H

@@ -8,20 +8,14 @@ MySwitchButton::MySwitchButton(QWidget *parent)
 {
     this->setFixedSize(150, 50);
 
+    // 数据初始化
     m_isOff = true;
     m_currX = height() / 2;
     m_R = height() / 2;
-
-    m_offBackgroundBrush = Qt::gray;
-    m_onBackgroundBrush = Qt::blue;
-
-    m_indicatorBrush = Qt::white;
-
     m_offText = "OFF";
     m_onText = "ON";
 
-    update();
-
+    // 动画初始化
     m_animation = new QPropertyAnimation(this);
     m_animation->setTargetObject(this);
     m_animation->setEasingCurve(QEasingCurve::OutBounce);
@@ -32,6 +26,8 @@ MySwitchButton::MySwitchButton(QWidget *parent)
         m_currX = value.toInt();
         update();
     });
+
+    update();
 }
 
 void MySwitchButton::paintEvent(QPaintEvent *event)
@@ -41,19 +37,19 @@ void MySwitchButton::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::NoPen);
 
     // 绘制左边进度条
-    painter.setBrush(m_onBackgroundBrush);
+    painter.setBrush(Qt::blue);
     painter.drawRoundedRect(0, 0, m_currX + m_R, height(), m_R, m_R);
 
     // 绘制右边进度条
-    painter.setBrush(m_offBackgroundBrush);
+    painter.setBrush(Qt::gray);
     painter.drawRoundedRect(m_currX - m_R, 0, width() - m_currX + m_R, height(), m_R, m_R);
 
     // 绘制按钮
-    painter.setBrush(m_indicatorBrush);
+    painter.setBrush(Qt::white);
     painter.drawEllipse(QPoint(m_currX, m_R), m_R, m_R);
 
     painter.setPen(Qt::white);
-    painter.setFont(QFont("宋体", 30));
+    painter.setFont(QFont("华文彩云", 30));
     if (m_currX == m_R) painter.drawText(height(), 0, width() - height(), height(), Qt::AlignCenter, m_offText);
     if (m_currX == width() - m_R) painter.drawText(0, 0, width() - height(), height(), Qt::AlignCenter, m_onText);
 }

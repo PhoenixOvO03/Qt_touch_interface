@@ -18,19 +18,14 @@ protected:
 signals:    
 
 private:
-    bool m_isOff;
-    int m_currX;
-    int m_R;
+    bool m_isOff;   // 是否关闭
+    int m_currX;    // 当前圆点位置
+    int m_R;        // 半径
 
-    QBrush m_offBackgroundBrush;
-    QBrush m_onBackgroundBrush;
+    QString m_offText;  // 关闭文字
+    QString m_onText;   // 开启文字
 
-    QBrush m_indicatorBrush;
-
-    QString m_offText;
-    QString m_onText;
-
-    QPropertyAnimation* m_animation;
+    QPropertyAnimation* m_animation;    // 动画
 };
 
 #endif // MYSWITCHBUTTON_H
