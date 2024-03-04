@@ -51,7 +51,12 @@ void MyCircleProgress::paintProgress(QPainter &painter)
     outPath.closeSubpath();
     inPath.addEllipse(rect().center(), m_inR, m_inR);
 
-    painter.setBrush(Qt::blue);
+    QConicalGradient Conical(rect().center(), 271);
+    Conical.setColorAt(0.2,QColor(255,88,127,200));//红色
+    Conical.setColorAt(0.8,QColor(53,179,251,150));//蓝色
+    painter.setBrush(Conical);
+    // painter.setBrush(Qt::blue);
+
     painter.drawPath(outPath.subtracted(inPath));
     painter.restore();
 }
