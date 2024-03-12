@@ -13,5 +13,6 @@
         <file>img/CustomControl.png</file>
         <file>img/PainterX.png</file>
         <file>img/brick.png</file>
+        <file>img/checkFace.png</file>
     </qresource>
 </RCC>

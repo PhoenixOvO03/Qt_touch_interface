@@ -3,6 +3,7 @@
 #include "musicplayer.h"
 #include "customcontrol.h"
 #include "painterx.h"
+#include "checkface.h"
 
 #include <QIcon>
 #include <QPainter>
@@ -81,6 +82,14 @@ App::App(const QString &name, QWidget *parent)
             emit clicked(new CustomControl(), m_name->text(), m_appBtn->icon());
         });
     }
+    else if (name == "人脸识别")
+    {
+        m_appBtn->setIcon(QIcon(":/img/checkFace.png"));
+        m_description = "PythonQt OpenCV";
+        connect(m_appBtn, &QPushButton::clicked, [&](){
+            emit clicked(new CheckFace(), m_name->text(), m_appBtn->icon());
+        });
+    }
     else
     {
         m_appBtn->setIcon(QIcon(":/img/qt.png"));
@@ -90,18 +99,22 @@ App::App(const QString &name, QWidget *parent)
 
 void App::enterEvent(QEnterEvent *event)
 {
+    Q_UNUSED(event);
+
     // 鼠标进入按钮放大、显示详情
     m_appBtn->setFixedSize(140,140);
     m_appBtn->setIconSize(QSize(140,140));
-    emit pressed(m_description);
+    emit hover(m_description);
     update();
 }
 
 void App::leaveEvent(QEvent *event)
 {
+    Q_UNUSED(event);
+
     // 鼠标离开按钮复原、关闭详情
     m_appBtn->setFixedSize(100,100);
     m_appBtn->setIconSize(QSize(100,100));
-    emit pressed("");
+    emit hover("");
     update();
 }

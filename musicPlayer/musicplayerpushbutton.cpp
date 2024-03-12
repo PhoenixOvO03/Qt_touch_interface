@@ -3,8 +3,8 @@
 MusicPlayerPushButton::MusicPlayerPushButton(QWidget *parent)
     : QPushButton{parent}
 {
-    this->setFixedSize(50, 50);
-    this->setIconSize(QSize(50, 50));
+    this->setFixedSize(25, 25);
+    this->setIconSize(QSize(25, 25));
 }
 
 MusicPlayerPushButton::MusicPlayerPushButton(QString type, QWidget *parent)

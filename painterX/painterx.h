@@ -15,6 +15,7 @@ class PainterX : public Software
 public:
     explicit PainterX(QWidget *parent = nullptr);
 
+private:
     void interfaceInit();   // 界面初始化
     void itemInit();        // combobox数据初始化
     void connectInit();     // connect函数初始化

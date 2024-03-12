@@ -23,10 +23,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void appBottonInit();   // 软件按钮初始化
-    void functionButtonInit();  // 功能按钮初始化
-    void interfaceInit();   // 界面初始化
-
 protected:
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -34,10 +30,15 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
+    void appBottonInit();   // 软件按钮初始化
+    void functionButtonInit();  // 功能按钮初始化
+    void interfaceInit();   // 界面初始化
+
+private:
     Ui::MainWindow *ui;
 
-    bool m_mousePress;
-    QPoint m_pressPos;
+    bool m_mousePress;  // 按钮是否按下
+    QPoint m_pressPos;  // 记录鼠标按下的初始位置
 
     QVector<App*> m_appList;    // 存储所有app
     QVector<FunctionButton*> m_functionBtnList;    // 存储所有的功能按钮

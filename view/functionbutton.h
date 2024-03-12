@@ -17,7 +17,7 @@ public:
     void function(MainWindow* window);
 
 signals:
-    void pressed(QString arg);
+    void hover(QString arg);
     void clicked(FunctionButton* now);
 
 protected:

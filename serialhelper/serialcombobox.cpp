@@ -20,30 +20,12 @@ SerialComboBox::SerialComboBox(QString name, QWidget *parent)
     m_label->setText(name);
 
     // 根据名字选择初始化参数
-    if (name == "波特率")
-    {
-        setItems(QStringList() << "4800" << "9600" << "19200");
-    }
-    else if (name == "数据位")
-    {
-        setItems(QStringList() << "8");
-    }
-    else if (name == "停止位")
-    {
-        setItems(QStringList() << "1" << "2");
-    }
-    else if (name == "校验位")
-    {
-        setItems(QStringList() << "无校验" << "奇校验" << "偶校验");
-    }
-    else if (name == "发送格式")
-    {
-        setItems(QStringList() << "HEX" << "文本");
-    }
-    else if (name == "接收格式")
-    {
-        setItems(QStringList() << "HEX" << "文本");
-    }
+    if (name == "波特率") setItems(QStringList() << "4800" << "9600" << "19200");
+    else if (name == "数据位") setItems(QStringList() << "8");
+    else if (name == "停止位") setItems(QStringList() << "1" << "2");
+    else if (name == "校验位") setItems(QStringList() << "无校验" << "奇校验" << "偶校验");
+    else if (name == "发送格式") setItems(QStringList() << "HEX" << "文本");
+    else if (name == "接收格式") setItems(QStringList() << "HEX" << "文本");
 }
 
 QString SerialComboBox::currentText()

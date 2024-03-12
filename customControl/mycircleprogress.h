@@ -10,6 +10,7 @@ class MyCircleProgress : public QWidget
 public:
     explicit MyCircleProgress(QWidget *parent = nullptr);
 
+private:
     void paintGray(QPainter& painter);
     void paintProgress(QPainter& painter);
     void paintText(QPainter& painter);

@@ -68,18 +68,22 @@ void FunctionButton::function(MainWindow *window)
 
 void FunctionButton::enterEvent(QEnterEvent *event)
 {
+    Q_UNUSED(event);
+
     // 鼠标进入按钮放大、显示详情
     m_functionBtn->setFixedSize(140,140);
     m_functionBtn->setIconSize(QSize(140,140));
-    emit pressed(m_description);
+    emit hover(m_description);
     update();
 }
 
 void FunctionButton::leaveEvent(QEvent *event)
 {
+    Q_UNUSED(event);
+
     // 鼠标离开按钮复原、关闭详情
     m_functionBtn->setFixedSize(100,100);
     m_functionBtn->setIconSize(QSize(100,100));
-    emit pressed("");
+    emit hover("");
     update();
 }

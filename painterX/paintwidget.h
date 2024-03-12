@@ -34,6 +34,7 @@ public:
 public:
     explicit PaintWidget(QWidget *parent = nullptr);
 
+public slots:
     void setShape(Shape shape); // 设置形状
     void setPen(QPen pen);      // 设置画笔
     void setBrush(QColor color, Qt::BrushStyle style);  // 设置笔刷

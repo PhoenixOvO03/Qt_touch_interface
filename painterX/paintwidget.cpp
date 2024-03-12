@@ -72,6 +72,8 @@ void PaintWidget::setTransform(bool transform)
 
 void PaintWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     static const QPoint points[4] = {QPoint(10,80), QPoint(20,10), QPoint(80,30), QPoint(90,70)};
     static const QRect rect(10,20,80,60);
 

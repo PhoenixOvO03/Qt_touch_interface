@@ -17,6 +17,8 @@ MySliderHundred::MySliderHundred(QWidget *parent)
 
 void MySliderHundred::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);

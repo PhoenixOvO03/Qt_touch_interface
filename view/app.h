@@ -15,7 +15,7 @@ public:
     explicit App(const QString& name, QWidget *parent = nullptr);
 
 signals:
-    void pressed(QString arg);
+    void hover(QString arg);
     void clicked(Software* app, QString name, QIcon icon);
 
 protected:

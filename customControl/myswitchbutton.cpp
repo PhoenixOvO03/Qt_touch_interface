@@ -32,6 +32,8 @@ MySwitchButton::MySwitchButton(QWidget *parent)
 
 void MySwitchButton::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
@@ -79,6 +81,8 @@ void MySwitchButton::mousePressEvent(QMouseEvent *event)
 
 void MySwitchButton::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
+
     m_animation->setStartValue(height() / 2);
     m_animation->setEndValue(width() - height() / 2);
     m_R = height() / 2;

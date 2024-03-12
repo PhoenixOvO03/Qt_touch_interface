@@ -81,6 +81,8 @@ void MyCircleProgress::setValue(int value)
 
 void MyCircleProgress::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);

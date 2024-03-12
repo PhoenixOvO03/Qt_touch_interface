@@ -23,8 +23,9 @@ public:
 
 signals:
 
-
 private slots:
+    void addMusicDir();  // 添加音乐
+    void addMusic(QString path);  // 添加音乐
     void prevMusic();   // 上一曲
     void nextMusic();   // 下一曲
     void volumeBtnClicked();    // 音量按钮
@@ -47,9 +48,9 @@ private:
 
     QVector<QUrl> m_playList;   // 播放列表
 
-    int m_currentPlayIndex;
-    QLabel* m_currentTime;
-    QLabel* m_allTime;
+    int m_currentPlayIndex; // 当前播放序号
+    QLabel* m_currentTime;  // 已播放时间
+    QLabel* m_allTime;      // 总时长
 };
 
 #endif // MUSICPLAYER_H

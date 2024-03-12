@@ -20,13 +20,15 @@ musicPlayer::musicPlayer(QWidget *parent)
 
     interfaceInit();
     connectInit();
+
+    addMusic("../Qt_touch_interface/music");
 }
 
 void musicPlayer::interfaceInit()
 {
     // 列表窗口
     m_musicList = new QListWidget();
-    m_musicList->setFixedSize(700,400);
+    m_musicList->setFixedSize(700,500);
 
     QHBoxLayout* musicList = new QHBoxLayout();
     musicList->addStretch(1);
@@ -38,42 +40,32 @@ void musicPlayer::interfaceInit()
     m_currentTime = new QLabel("00:00", this);
     m_allTime = new QLabel("00:00", this);
 
-    QHBoxLayout* musicProgress = new QHBoxLayout();
-    musicProgress->addWidget(m_currentTime);
-    musicProgress->addWidget(m_musicProgress);
-    musicProgress->addWidget(m_allTime);
-
     // 按钮
     m_file = new MusicPlayerPushButton("文件", this);
-    m_list = new MusicPlayerPushButton("菜单", this);
+    // m_list = new MusicPlayerPushButton("菜单", this);
     m_prev = new MusicPlayerPushButton("上一曲", this);
     m_pause = new MusicPlayerPushButton("播放", this);
     m_next = new MusicPlayerPushButton("下一曲", this);
     m_volume = new MusicPlayerPushButton("音量", this);
 
     QHBoxLayout* Buttons = new QHBoxLayout();
-    Buttons->addStretch(1);
+    Buttons->addSpacing(20);
     Buttons->addWidget(m_file);
-    Buttons->addStretch(1);
-    Buttons->addWidget(m_list);
-    Buttons->addStretch(1);
     Buttons->addWidget(m_prev);
-    Buttons->addStretch(1);
     Buttons->addWidget(m_pause);
-    Buttons->addStretch(1);
     Buttons->addWidget(m_next);
-    Buttons->addStretch(1);
+    Buttons->addWidget(m_currentTime);
+    Buttons->addWidget(m_musicProgress);
+    Buttons->addWidget(m_allTime);
     Buttons->addWidget(m_volume);
-    Buttons->addStretch(1);
+    Buttons->addSpacing(20);
 
     QVBoxLayout* m_allWidget = new QVBoxLayout(this);
     m_allWidget->addStretch(1);
     m_allWidget->addLayout(musicList);
     m_allWidget->addStretch(1);
-    m_allWidget->addLayout(musicProgress);
-    m_allWidget->addStretch(1);
     m_allWidget->addLayout(Buttons);
-    m_allWidget->addStretch(1);
+    m_allWidget->addSpacing(20);
 
     // 音量滑块
     m_volumeProgress = new QSlider(Qt::Vertical, this);
@@ -86,22 +78,7 @@ void musicPlayer::interfaceInit()
 void musicPlayer::connectInit()
 {
     // 文件按钮
-    connect(m_file, &QPushButton::clicked, [&](){
-        QString path = QFileDialog::getExistingDirectory(this, "请选择音乐所在的目录", "../");
-        QDir dir(path);
-        QStringList musicList = dir.entryList(QStringList()<<"*.mp3"<<"*.wav");
-        m_musicList->setCurrentRow(m_currentPlayIndex);
-
-        for (QString file : musicList)
-        {
-            QUrl fileUrl = QUrl::fromLocalFile(path + "/" + file);
-            if (m_playList.contains(fileUrl) == false)
-            {
-                m_musicList->addItem(file);
-                m_playList.append(fileUrl);
-            }
-        }
-    });
+    connect(m_file, &QPushButton::clicked, this, &musicPlayer::addMusicDir);
 
     // 播放按钮
     connect(m_pause, &QPushButton::clicked, [&](){
@@ -164,6 +141,29 @@ void musicPlayer::connectInit()
     connect(m_volumeProgress, &QSlider::sliderMoved, [&](int position){
         m_output->setVolume(position*1.0 / 100);
     });
+}
+
+void musicPlayer::addMusicDir()
+{
+    QString path = QFileDialog::getExistingDirectory(this, "请选择音乐所在的目录", "../");
+    addMusic(path);
+}
+
+void musicPlayer::addMusic(QString path)
+{
+    QDir dir(path);
+    QStringList musicList = dir.entryList(QStringList()<<"*.mp3"<<"*.wav");
+
+    for (QString file : musicList)
+    {
+        QUrl fileUrl = QUrl::fromLocalFile(path + "/" + file);
+        if (m_playList.contains(fileUrl) == false)
+        {
+            m_musicList->addItem(file);
+            m_playList.append(fileUrl);
+        }
+    }
+    m_musicList->setCurrentRow(m_currentPlayIndex);
 }
 
 void musicPlayer::prevMusic()

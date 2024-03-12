@@ -18,9 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_mousePress = false;
 
-    /*设置去掉窗口边框*/
-    this->setWindowFlags(Qt::FramelessWindowHint);
-
     appBottonInit();
     functionButtonInit();
     interfaceInit();
@@ -35,14 +32,16 @@ void MainWindow::appBottonInit()
 {
     // 按钮数组初始化
     m_appList << new App("串口助手") << new App("音乐播放器") << new App("绘图效果预览") << new App("自定义控件")
-              << new App("null") << new App("null") << new App("null") << new App("null");
+              << new App("人脸识别") << new App("null") << new App("null") << new App("null");
 
     // 初始化press和click点击的connect
     for (int i = 0; i < 8; ++i)
     {
-        connect(m_appList.at(i), &App::pressed, [&](QString arg){
+        // 悬停
+        connect(m_appList.at(i), &App::hover, [&](QString arg){
             ui->statusbar->showMessage(arg);
         });
+        // 点击
         connect(m_appList.at(i), &App::clicked, [&](Software* app, QString name, QIcon icon){
             this->setWindowIcon(icon);
             this->setWindowTitle(name);
@@ -56,15 +55,18 @@ void MainWindow::appBottonInit()
 
 void MainWindow::functionButtonInit()
 {
+    // 功能按钮初始化
     m_functionBtnList << new FunctionButton("null") << new FunctionButton("null")
                       << new FunctionButton("null") << new FunctionButton("关闭");
 
     // 初始化press和click点击的connect
     for (int i = 0; i < 4; ++i)
     {
-        connect(m_functionBtnList.at(i), &FunctionButton::pressed, [&](QString arg){
+        // 悬浮
+        connect(m_functionBtnList.at(i), &FunctionButton::hover, [&](QString arg){
             ui->statusbar->showMessage(arg);
         });
+        // 点击
         connect(m_functionBtnList.at(i), &FunctionButton::clicked, [&](FunctionButton* btn){
             btn->function(this);
         });
@@ -73,6 +75,9 @@ void MainWindow::functionButtonInit()
 
 void MainWindow::interfaceInit()
 {
+    /*设置去掉窗口边框*/
+    this->setWindowFlags(Qt::FramelessWindowHint);
+
     //主界面
     this->setFixedSize(800,600);
     this->setWindowTitle("Touch_interface");
@@ -111,7 +116,7 @@ void MainWindow::interfaceInit()
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     // 按下Esc退出app显示主界面
-    if (event->key() == Qt::Key_Escape)
+    if (event->key() == Qt::Key_Escape && m_currentApp)
     {
         delete m_currentApp;
         m_currentApp = nullptr;
@@ -127,12 +132,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     {
         m_mousePress = true;
     }
-    //窗口移动距离
+    // 点击位置
     m_pressPos = event->globalPos() - pos();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
+
     m_mousePress = false;
 }
 
@@ -140,7 +147,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_mousePress)
     {
-        QPoint movePos = event->globalPos();//窗口初始位置
+        // 移动位置
+        QPoint movePos = event->globalPos();
         move(movePos - m_pressPos);
     }
 }
