@@ -77,7 +77,7 @@ App::App(const QString &name, QWidget *parent)
     else if (name == "自定义控件")
     {
         m_appBtn->setIcon(QIcon(":/img/CustomControl.png"));
-        m_description = "QPaintEvent QPainter QBrush";
+        m_description = "QPaintEvent QPainter QBrush QPropertyAnimation";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new CustomControl(), m_name->text(), m_appBtn->icon());
         });
@@ -85,7 +85,7 @@ App::App(const QString &name, QWidget *parent)
     else if (name == "人脸识别")
     {
         m_appBtn->setIcon(QIcon(":/img/checkFace.png"));
-        m_description = "PythonQt OpenCV";
+        m_description = "OpenCV";
         connect(m_appBtn, &QPushButton::clicked, [&](){
             emit clicked(new CheckFace(), m_name->text(), m_appBtn->icon());
         });

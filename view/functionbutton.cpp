@@ -46,7 +46,12 @@ FunctionButton::FunctionButton(const QString &name, QWidget *parent)
         emit clicked(this);
     });
 
-    if (name == "关闭")
+    if (name == "隐藏")
+    {
+        m_functionBtn->setIcon(QIcon(":/img/hide.png"));
+        m_description = "隐藏所有app";
+    }
+    else if (name == "关闭")
     {
         m_functionBtn->setIcon(QIcon(":/img/close.png"));
         m_description = "关闭当前窗口";
@@ -60,7 +65,11 @@ FunctionButton::FunctionButton(const QString &name, QWidget *parent)
 
 void FunctionButton::function(MainWindow *window)
 {
-    if (m_name->text() == "关闭")
+    if (m_name->text() == "隐藏")
+    {
+        window->hideApps(true);
+    }
+    else if (m_name->text() == "关闭")
     {
         window->close();
     }

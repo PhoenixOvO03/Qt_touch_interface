@@ -23,6 +23,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void hideApps(bool flag);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -38,7 +40,8 @@ private:
     Ui::MainWindow *ui;
 
     bool m_mousePress;  // 按钮是否按下
-    QPoint m_pressPos;  // 记录鼠标按下的初始位置
+    QPoint m_pressMousePos;     // 记录鼠标按下鼠标的初始位置
+    QPoint m_pressWindowPos;    // 记录鼠标按下窗口的初始位置
 
     QVector<App*> m_appList;    // 存储所有app
     QVector<FunctionButton*> m_functionBtnList;    // 存储所有的功能按钮

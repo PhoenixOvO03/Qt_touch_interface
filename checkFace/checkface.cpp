@@ -1,96 +1,36 @@
 #include "checkface.h"
-
-#include <QLabel>
-#include <QTimer>
-#include <QBrush>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-
-using namespace cv;
+#include "checkfacestart.h"
+#include "checkfacesignin.h"
+#include "checkfacesignup.h"
 
 CheckFace::CheckFace(QWidget *parent)
     : Software{parent}
 {
-    interfaceInit();
-    connectInit();
+    m_unLock = nullptr;
+
+    m_start = new CheckFaceStart(this);
+    m_signIn = new CheckFaceSignIn(this);
+    m_signUp = new CheckFaceSignUp(this);
+    m_signIn->hide();
+    m_signUp->hide();
+
+    connect(m_start, &CheckFaceStart::signIn, this, [&](){
+        m_start->hide();
+        m_signIn->show();
+    });
+
+    connect(m_start, &CheckFaceStart::signUp, this, [&](){
+        m_start->hide();
+        m_signUp->show();
+    });
+
+    connect(m_signIn, &CheckFaceSignIn::returnBack, this, [&](){
+        m_signIn->hide();
+        m_start->show();
+    });
+
+    connect(m_signUp, &CheckFaceSignUp::returnBack, this, [&](){
+        m_signUp->hide();
+        m_start->show();
+    });
 }
-
-void CheckFace::interfaceInit()
-{
-    m_openbtn = new QPushButton("打开摄像头");
-    m_closebtn = new QPushButton("关闭摄像头");
-    m_closebtn->setEnabled(false);
-
-    QVBoxLayout* btnsLayout = new QVBoxLayout();
-    btnsLayout->addWidget(m_openbtn);
-    btnsLayout->addWidget(m_closebtn);
-
-    m_video_label = new QLabel(this);
-
-    QHBoxLayout* allLayout = new QHBoxLayout(this);
-    allLayout->addWidget(m_video_label);
-    allLayout->addStretch(1);
-    allLayout->addLayout(btnsLayout);
-}
-
-void CheckFace::connectInit()
-{
-    m_timer = new QTimer(this);
-    connect(m_timer,&QTimer::timeout,this,&CheckFace::readFrame);//超时就捕捉一张图片
-    connect(m_openbtn, &QPushButton::clicked, this, &CheckFace::opencamera);
-    connect(m_closebtn, &QPushButton::clicked, this, &CheckFace::closecamera);
-}
-
-QImage CheckFace::Mat2QImage(const Mat &mat)//mat转QImage
-{
-    if(mat.type()==CV_8UC1)
-    {
-        QVector<QRgb>colorTable;
-        for(int i=0;i<256;i++)
-            colorTable.push_back(qRgb(i,i,i));
-        const uchar*qImageBuffer=(const uchar*)mat.data;
-        QImage img(qImageBuffer,mat.cols,mat.rows,mat.step,QImage::Format_Indexed8);
-        img.setColorTable(colorTable);
-        return img;
-    }
-    //8-bitsunsigned,NO.OFCHANNELS=3
-    if(mat.type()==CV_8UC3)
-    {
-        const uchar*qImageBuffer=(const uchar*)mat.data;
-        QImage img(qImageBuffer,mat.cols,mat.rows,mat.step,QImage::Format_RGB888);
-        return img.rgbSwapped();
-    }
-    else
-    {
-        return QImage();
-    }
-}
-
-void CheckFace::opencamera() //打开摄像头
-{
-    m_cam.open(0);
-    m_timer->start(33);        // 开始计时
-
-    m_openbtn->setEnabled(false);
-    m_closebtn->setEnabled(true);
-}
-
-void CheckFace::closecamera()//关闭摄像头
-{
-    m_cam.release();
-    m_timer->stop();
-    readFrame();
-
-    m_openbtn->setEnabled(true);
-    m_closebtn->setEnabled(false);
-}
-
-void CheckFace::readFrame() //读取帧并显示
-{
-    m_cam >> m_frame;
-    m_imag = Mat2QImage(m_frame);
-    m_video_label->setPixmap(QPixmap::fromImage(m_imag));
-}
-
-

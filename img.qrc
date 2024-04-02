@@ -14,5 +14,6 @@
         <file>img/PainterX.png</file>
         <file>img/brick.png</file>
         <file>img/checkFace.png</file>
+        <file>img/hide.png</file>
     </qresource>
 </RCC>

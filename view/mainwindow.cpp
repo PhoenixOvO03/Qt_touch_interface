@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     m_mousePress = false;
+    m_currentApp = nullptr;
 
     appBottonInit();
     functionButtonInit();
@@ -26,6 +27,20 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::hideApps(bool flag)
+{
+    if (flag)
+    {
+        ui->centralwidget->hide();
+    }
+    else
+    {
+        ui->centralwidget->show();
+        this->setWindowTitle("Touch_interface");
+        this->setWindowIcon(QIcon(":/img/qt.png"));
+    }
 }
 
 void MainWindow::appBottonInit()
@@ -45,7 +60,8 @@ void MainWindow::appBottonInit()
         connect(m_appList.at(i), &App::clicked, [&](Software* app, QString name, QIcon icon){
             this->setWindowIcon(icon);
             this->setWindowTitle(name);
-            ui->centralwidget->hide();
+            // ui->centralwidget->hide();
+            this->hideApps(true);
             m_currentApp = app;
             m_currentApp->setParent(this);
             m_currentApp->show();
@@ -56,7 +72,7 @@ void MainWindow::appBottonInit()
 void MainWindow::functionButtonInit()
 {
     // 功能按钮初始化
-    m_functionBtnList << new FunctionButton("null") << new FunctionButton("null")
+    m_functionBtnList << new FunctionButton("隐藏") << new FunctionButton("null")
                       << new FunctionButton("null") << new FunctionButton("关闭");
 
     // 初始化press和click点击的connect
@@ -95,7 +111,7 @@ void MainWindow::interfaceInit()
     for (int i = 4;i < 8; ++i)m_secondFloor->addWidget(m_appList.at(i));
     m_secondFloor->addStretch(1);
 
-    // 第三层App
+    // 第三层功能按钮
     m_thirdFllor = new QHBoxLayout();
     m_thirdFllor->addStretch(1);
     for (int i = 0;i < 4; ++i)m_thirdFllor->addWidget(m_functionBtnList.at(i));
@@ -120,20 +136,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         delete m_currentApp;
         m_currentApp = nullptr;
-        ui->centralwidget->show();
-        this->setWindowTitle("Touch_interface");
-        this->setWindowIcon(QIcon(":/img/qt.png"));
+        this->hideApps(false);
     }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    if(event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton)
     {
         m_mousePress = true;
+        m_pressWindowPos = pos();
+        m_pressMousePos = event->globalPosition().toPoint() - pos();
     }
-    // 点击位置
-    m_pressPos = event->globalPos() - pos();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
@@ -141,14 +155,19 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     Q_UNUSED(event);
 
     m_mousePress = false;
+    // 窗口未移动并且没有打开app
+    if (pos() == m_pressWindowPos && m_currentApp == nullptr)
+    {
+        this->hideApps(false);
+    }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if(m_mousePress)
+    if (m_mousePress)
     {
         // 移动位置
-        QPoint movePos = event->globalPos();
-        move(movePos - m_pressPos);
+        QPoint movePos = event->globalPosition().toPoint();
+        move(movePos - m_pressMousePos);
     }
 }
