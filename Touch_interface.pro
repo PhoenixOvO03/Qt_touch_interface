@@ -10,7 +10,7 @@ CONFIG += c++17
 
 # opencv4.9.0
 INCLUDEPATH += C:\Users\29853\Documents\tool\opencv\build\include
-INCLUDEPATH += C:\Users\29853\Documents\tool\opencv\release\bin
+# INCLUDEPATH += C:\Users\29853\Documents\tool\opencv\release\bin
 LIBS += C:\Users\29853\Documents\tool\opencv\release\bin\libopencv_core490.dll
 LIBS += C:\Users\29853\Documents\tool\opencv\release\bin\libopencv_highgui490.dll
 LIBS += C:\Users\29853\Documents\tool\opencv\release\bin\libopencv_imgcodecs490.dll
